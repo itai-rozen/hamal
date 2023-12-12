@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Nav from './components/Nav'
-import AuthProvider from './components/AuthProvider'
 
 import './globals.css'
 
@@ -19,12 +18,10 @@ export default function RootLayout({
 }) {
   return (
       <html lang="en">
-        <AuthProvider>
           <body className={inter.className}>
             <Nav />
             {children}
           </body>
-        </AuthProvider>
      </html>
   )
 }
