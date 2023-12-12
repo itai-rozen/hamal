@@ -1,22 +1,22 @@
-"use client"
-
 import Image from 'next/image'
-import Form from './components/Form'
 import styles from './page.module.css'
-import { useState } from 'react'
+import Dashboard from './components/Dashboard'
+import { createPool, sql } from '@vercel/postgres'
 
-export default function Home() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+
+export default async function Home() {
+  console.log('postgres url: ', process.env.POSTGRES_DATABASE)
+  // const pool = createPool({
+    // connectionString: "postgres://default:e8ymAJvNZ6fV@ep-floral-wildflower-50745834-pooler.eu-central-1.postgres.vercel-storage.com:5432/verceldb"
+  // });
+  // console.log('pool: ', pool)
+  try {
+    const rows = await sql`SELECT * FROM users;`;
+    console.log('roes: ', rows)
+  } catch(err) {
+    console.log('err sql connection: ')
+  }
   return (
-    <main>
-      <h1>Hamal</h1>
-    <Form 
-    setUsername={setUsername}
-    setPassword={setPassword}
-    />
-    <h4>{username}</h4>
-    <h4>{password}</h4>
-    </main>
+    <Dashboard />
   )
 }
