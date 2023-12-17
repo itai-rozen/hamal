@@ -1,25 +1,25 @@
 "use client"
 
 import Image from 'next/image'
-import Form from './Form'
+import MainForm from './MainForm'
 import styles from './page.module.css'
-import { useState } from 'react'
 
 
 
-export default function Dashboard() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  // console.log('process env: ', process.env)
+export default function Dashboard({  users  }: any) {
   return (
     <main>
       <h1>Hamal</h1>
-    <Form 
-    setUsername={setUsername}
-    setPassword={setPassword}
-    />
-    <h4>{username}</h4>
-    <h4>{password}</h4>
+    <MainForm />
+    {
+      users.map((user: { user_id: number, password: string, email: string }) => {
+        return <div key={user.user_id}>
+            <div>{user.user_id}</div>
+            <div>{user.password}</div>
+            <div>{user.email}</div>
+         </div>
+      })
+    }
     </main>
   )
 }
