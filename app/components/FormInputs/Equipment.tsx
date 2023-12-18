@@ -10,9 +10,6 @@ export default function Equipment() {
     <input id="phone" type="phone" required />
     <label htmlFor="need_transport">Need transport? :</label>
     <input type="checkbox" name="need_transport" id="need_transport" onChange={(e: ChangeEvent<HTMLInputElement>) => setNeedTransport((e.target.checked)) } />
-    { 
-      console.log(needTransport)
-    }
     {
       needTransport && <>
       <label htmlFor="address">Address: </label>
