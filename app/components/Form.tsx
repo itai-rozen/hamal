@@ -1,17 +1,12 @@
 "use client"
 
 import Equipment from "./FormInputs/Equipment"
+import { formProps, inputsMapType } from "../types/intefaces"
+export default function Form({ tableName }: formProps) {
 
-interface formProps {
-  tableName: string
-}
-export default function Form({ tableName  }: formProps)  {
-  interface inputsMap {
-    equipment : React.Component
+  const inputsMap: inputsMapType = {
+    equipment: <Equipment />
   }
-  const inputsMap =  {
-    equipment : <Equipment />
-  }
-  return inputsMap[tableName];
-  
+  return inputsMap[tableName as keyof inputsMapType]
+
 }
