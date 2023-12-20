@@ -5,7 +5,7 @@ import { sql } from '@vercel/postgres'
 
 
 export default async function Home():Promise<JSX.Element>{
-  const users = await getUsers()
+    const users = await getUsers()
   return (
     <Dashboard users={users.data} />
   )
