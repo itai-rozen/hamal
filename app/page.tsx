@@ -15,7 +15,7 @@ async function getUsers() {
   interface res  {
     data?: object,
     err?: string|object|unknown
-  }
+  } 
   const res: res = {
     data: {},
     err: ''
