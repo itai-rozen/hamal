@@ -2,12 +2,13 @@
 import { createPool } from "@vercel/postgres";
 export default async function connectDb(q) {
     const client = createPool({connectionString: process.env.POSTGRES_URL});
-    let res = {};
+    let res = {rows: [], err: ''};
     try {
-      res.rows = await client.query(q);
-      await client.end()
+      const { rows } = await client.query(q);
+      res.rows = rows;
     } catch(err) {
       res.err = err;
     }
+    await client.end()
     return JSON.stringify(res)
 }
