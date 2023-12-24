@@ -5,9 +5,9 @@ export default function Equipment() {
   return (
   <>
     <label htmlFor="fullname">Full Name:</label>
-    <input id="fullname" type="text" required />
+    <input id="fullname" name="fullname" type="text" required />
     <label htmlFor="phone">Phone:</label>
-    <input id="phone" type="phone" required />
+    <input id="phone" name="phone" type="phone" required />
     <label htmlFor="need_transport">Need transport? :</label>
     <input type="checkbox" name="need_transport" id="need_transport" onChange={(e: ChangeEvent<HTMLInputElement>) => setNeedTransport((e.target.checked)) } />
     {
