@@ -1,0 +1,24 @@
+.sql-table {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  flex-direction: column;
+}
+
+.sql-column {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sql-column > p {
+text-align: left;
+}
+
+
+textarea {
+  font-size: 1.5em;
+}
+.sql-btn{
+  padding: 10px 20px;
+  font-size: 1.5em;
+}
