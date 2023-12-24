@@ -10,7 +10,7 @@ export default function MainForm() {
   return (
     <div className="form-container">
       <form action={createQuery}>
-        <select id="hamal-req-table" onChange={(event:React.ChangeEvent<HTMLSelectElement>) => setReqTable(event.target.value)}>
+        <select name="table-name" id="hamal-req-table" onChange={(event:React.ChangeEvent<HTMLSelectElement>) => setReqTable(event.target.value)}>
           <option value="" selected></option>
           <option value="equipment">Equipment</option>
         </select>
