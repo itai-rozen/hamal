@@ -1,13 +1,12 @@
-import { sql } from '@vercel/postgres'
-
+import connectDb from './Workbench/connect'
 export async function createQuery(formData: FormData) {
-  // console.log('form data: ', formData)
-  console.log('form data keys: ',{...formData.keys()})
-  console.log('form data values: ',{...formData.values()})
-  for (const value in formData.values()) {
-    console.log('value: ', value)
-  }
-  const tableName = formData.get('table-name');
-  const query = `insert into ${tableName}`
-  console.log('query: ', query)
+  const rawFormData = Object.fromEntries(formData.entries());
+  let query = `INSERT INTO ${rawFormData.tableName} `;
+  delete rawFormData.tableName
+  const keys = Object.keys(rawFormData)
+  const values = Object.values(rawFormData)
+  query += `(${[...keys]}) VALUES(${values.map(value => value === 'true' ? true : `'${value}'`)})`;
+  console.log('q: ', query)
+  const response = await connectDb(query)
+  console.log('response: ', response)
 }
