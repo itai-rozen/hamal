@@ -10,6 +10,7 @@ export default function Workbench({getQuery} : {getQuery: Function}): React.Reac
     try {
       const resText: string = await connectDb(query);
       const res:{rows:[], err: string } = JSON.parse(resText)
+      console.log('result: ', res)
       if (res.rows?.length > 0) {
         console.log('rows" ',res.rows)
         setRows(res.rows)
@@ -29,6 +30,9 @@ export default function Workbench({getQuery} : {getQuery: Function}): React.Reac
       <button className='sql-btn' onClick={handleQuery}>ok</button>
       {
         error && <h4>{JSON.stringify(error)}</h4>
+      }
+      {
+        !rows.length && !error && <p>0 rows found</p>
       }
       <div className="sql-table">
       {
