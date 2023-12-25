@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "sql": "node -r dotenv/config ./app/scripts/schema.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@vercel/postgres": "^0.5.1",
