@@ -1,31 +1,16 @@
 import Image from 'next/image'
 import styles from './page.module.css'
 import Dashboard from './components/Dashboard'
-import { sql } from '@vercel/postgres'
-
-
+import { getCookie, setCookie } from './actions'
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
+import { cookies } from 'next/headers'
+import { userIdType } from './types/intefaces'
 export default async function Home():Promise<JSX.Element>{
-    const users = await getUsers()
+  await fetch('http://localhost:3000/setCookie')
+  const userId = await getCookie('hamal_user_id');
+
   return (
-    <Dashboard users={users.data} />
+    <Dashboard userId={userId} />
   )
 }
 
-async function getUsers() {
-  interface res  {
-    data?: object,
-    err?: string|object|unknown
-  } 
-  const res: res = {
-    data: {},
-    err: ''
-  }
-  try {
-    const { rows } = await sql`SELECT * FROM users;`;
-    res.data = rows
-  } catch(err) {
-    res.err = err;
-    return res
-  }
-  return res;
-}
