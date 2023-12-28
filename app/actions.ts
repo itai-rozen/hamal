@@ -22,6 +22,5 @@ export async function getCookie(cookieName:string):Promise<RequestCookie|undefin
 }
 
 export async function setCookie(cookieName:string, value:string, expires: number) {
-  "use server"
-  cookies().set(cookieName, value, { expires })
+  cookies().set(cookieName, value, { maxAge: expires })
 }
