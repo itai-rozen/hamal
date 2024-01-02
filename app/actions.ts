@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 export async function createQuery(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
   console.log('formdata: ', rawFormData.sql_action)
-  const action      = rawFormData.sql_action;
+  const action  = rawFormData.sql_action;
   let query = `${action} ${rawFormData.tableName} `;
   delete rawFormData.tableName;
   delete rawFormData.sql_action;
