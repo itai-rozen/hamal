@@ -1,7 +1,26 @@
 "use client"
 import Image from "next/image"
 import { signIn } from "next-auth/react"
+import { useState } from "react"
+import connectDb from "../Workbench/connect"
+import  bcrypt from 'bcryptjs'
 export default function Login() {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  
+  async function signUp(formData: FormData) {
+    const email = formData.get('signup_email')
+    const password = formData.get('signup_password');
+    const repassword = formData.get('signup_repassword');
+    if (password !== repassword) {
+      setError('password was not re-entered correctly')
+      return;
+    }
+    const hashedPwd = bcrypt.hashSync(password as string, 10);
+    const query = `INSERT INTO users (email, password) VALUES(${email}, ${hashedPwd})`
+    return;
+  }
   return (
     <>
     <button onClick={() => signIn("google")}>
@@ -14,6 +33,39 @@ export default function Login() {
        priority={true}
        />
     </button>
+    <div>OR</div>
+    <form action={() => signIn('credentials', {
+      redirect: false,
+      email,
+      password
+    })}>
+      <h2>Login with email & password</h2>
+      <label htmlFor="email">Email</label>
+      <input type="email" name="email" id="email" onChange={e => setEmail(e.target.value)} />
+      <label htmlFor="password">Password</label>
+      <input type="password" name="password" id="password" onChange={e => setPassword(e.target.value)} />
+      <input type="submit" value="Login" />
+    </form>
+    <div>OR</div>
+    <form action={signUp}>
+      <h2>Sign Up</h2>
+      <input type="hidden" name="sql_action" id="sql_action" defaultValue="INSERT INTO"/>
+      <input type="hidden" name="tableName" id="tableName" defaultValue="users"/>
+      <label htmlFor="signup_email">Email</label>
+      <input type="email" name="signup_email" id="signup_email" />
+      <label htmlFor="signup_password">Password</label>
+      <small>* Must contain at least one number and one letter, and at least 8 or more characters</small>
+      <input 
+        type="password" 
+        name="signup_password" 
+        id="signup_password"
+        pattern="(?=.*\d)(?=.*[a-z]).{8,}"
+        title="Must contain at least one number and one letter, and at least 8 or more characters" />
+      <label htmlFor="signup_repassword">Re-enter Passowrd</label>
+      <input type="password" name="signup_repassword" id="signup_repassword" />
+      <input type="submit" value="Submit" />
+    </form>
+    {error && <p>{error}</p>}
     </>
   )
 }
