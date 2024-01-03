@@ -1,8 +1,9 @@
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
-import GoogleProvider from 'next-auth/providers/google'
+import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from "next-auth/providers/credentials";
-
+import { connectDb } from "@/app/actions";
+import bcrypt from 'bcryptjs'
 interface Credentials extends Record<"email" | "password", string> {}
 
 export const authOptions : NextAuthOptions = {
@@ -22,11 +23,18 @@ export const authOptions : NextAuthOptions = {
       // @ts-ignore
       async authorize(credentials) {
         console.log('credentials: ', credentials)
-        const user : {email: string, password: string} = {email: '2@ee', password: '12345'};
-        if (user) 
+        try {
+          const { rows } =  JSON.parse(await connectDb(`SELECT * FROM users WHERE email='${credentials?.email}'`));
+          if (rows.length) {
+          const user : { email: string, password: string } = rows[0];
+          console.log('user: ', user)
           return user;
+        } 
         else
           return null;
+        } catch(err) {
+          console.log('err @authorize: ', err)
+        }
       }
     })
     // ...add more providers here
