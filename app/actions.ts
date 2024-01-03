@@ -1,7 +1,9 @@
 "use server"
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
-import connectDb from './Workbench/connect'
+// import connectDb from './Workbench/connect'
 import { cookies } from 'next/headers';
+import { createPool } from "@vercel/postgres";
+
 export async function createQuery(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
   console.log('formdata: ', rawFormData.sql_action)
@@ -15,6 +17,23 @@ export async function createQuery(formData: FormData) {
   console.log('q: ', query)
   const response = await connectDb(query)
   console.log('response: ', response)
+}
+
+export async function connectDb(q: string): Promise<string> {
+    const client = createPool({connectionString: process.env.POSTGRES_URL});
+    console.log('client: ', client)
+    let res : { rows?: string[], err?: string|unknown } =  {rows: [], err: ''};
+    try {
+      const response = await client.query(q);
+      console.log('response: ', response)
+      const { rows } = response; 
+      res.rows = rows;
+    } catch(err) {
+      console.log('err: ', err)
+      res.err = err;
+    }
+    await client.end()
+    return JSON.stringify(res)
 }
 
 export async function getCookie(cookieName:string):Promise<RequestCookie|undefined> {
