@@ -1,5 +1,5 @@
 "use client"
-import connectDb  from './connect.js';
+import { connectDb } from '../actions'
 import './workbench.css'
 import { ChangeEvent, useState } from 'react'
 export default function Workbench({getQuery} : {getQuery: Function}): React.ReactNode {
