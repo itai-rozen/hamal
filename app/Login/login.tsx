@@ -2,12 +2,13 @@
 import Image from "next/image"
 import { signIn } from "next-auth/react"
 import { useState } from "react"
-import connectDb from "../Workbench/connect"
+import { connectDb } from "../actions"
 import  bcrypt from 'bcryptjs'
 export default function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [msg, setMsg] = useState<string>('');
   
   async function signUp(formData: FormData) {
     const email = formData.get('signup_email')
@@ -18,8 +19,18 @@ export default function Login() {
       return;
     }
     const hashedPwd = bcrypt.hashSync(password as string, 10);
-    const query = `INSERT INTO users (email, password) VALUES(${email}, ${hashedPwd})`
-    return;
+    const query = `INSERT INTO users (email, password) VALUES('${email}', '${hashedPwd}')`;
+    const responseText = await connectDb(query);
+    const { rows, err } = JSON.parse(responseText);
+    console.log('response: ', rows, err);
+    if (err) {
+      setError(JSON.stringify(err));
+      setMsg('');
+    }
+    else {
+      setError('');
+      setMsg('success!')
+    } 
   }
   return (
     <>
@@ -66,6 +77,7 @@ export default function Login() {
       <input type="submit" value="Submit" />
     </form>
     {error && <p>{error}</p>}
+    {msg && <p>{msg}</p>}
     </>
   )
 }
