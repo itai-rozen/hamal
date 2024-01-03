@@ -27,8 +27,9 @@ export const authOptions : NextAuthOptions = {
           const { rows } =  JSON.parse(await connectDb(`SELECT * FROM users WHERE email='${credentials?.email}'`));
           if (rows.length) {
           const user : { email: string, password: string } = rows[0];
-          console.log('user: ', user)
-          return user;
+          const valid : Boolean = await bcrypt.compare(credentials?.password as string, user.password);
+          console.log('valid: ', valid)
+          return (valid) ? user : null
         } 
         else
           return null;
