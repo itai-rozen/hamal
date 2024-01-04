@@ -4,21 +4,38 @@ import { useState, ChangeEvent } from 'react';
 import { createQuery } from '../actions';
 import Form from './Form'
 import { inputsMapType } from '../types/intefaces';
+import { Select, MenuItem, Input, SelectChangeEvent, Container, InputLabel, Button } from '@mui/material';
 
 export default function MainForm() {
-  const [reqTable, setReqTable] = useState<keyof inputsMapType|string>('equipment');
+  const [reqTable, setReqTable] = useState<keyof inputsMapType | string>('equipment');
   return (
-    <div className="form-container">
-      <form action={createQuery}>
-        <select name="tableName" id="hamal-req-table" defaultValue={'equipment'} onChange={(event:React.ChangeEvent<HTMLSelectElement>) => setReqTable(event.target.value)}>
-          <option value="" ></option>
-          <option value="equipment">Equipment</option>
-        </select>
-        { 
-          reqTable.length > 0  && <Form tableName={reqTable} />
-        }
-        <input type="submit" value="submit" />
-      </form>
-    </div>
+        <form action={createQuery} 
+            className='flex flex-col justify-between w-[80%] border px-4 py-8 rounded-sm mx-auto my-5 items-start h-[80%] shadow-sm
+                        *:my-5 [&>input]:px-2 [&>input]:py-4 [&>label]:border-bottom'> 
+
+
+          <Select 
+            sx={{my: 5}}
+            value='equipment' 
+            name="tableName" 
+            id="hamal-req-table"
+            label="Subject"
+            onChange={(event: SelectChangeEvent<string>) => setReqTable(event.target.value)}
+            >
+              <MenuItem value=""></MenuItem>
+              <MenuItem value="equipment">Equipment</MenuItem>
+          </Select>
+          {/* <select  defaultValue={'equipment'} onChange={(event:React.ChangeEvent<HTMLSelectElement>) => setReqTable(event.target.value)}> */}
+          {/* <option value="" ></option> */}
+          {/* <option value="equipment">Equipment</option> */}
+
+
+          {/* </select> */}
+          {
+            reqTable.length > 0 && <Form tableName={reqTable} />
+          }
+
+          <Input type='submit' value={'submit'} />
+        </form>
   )
 }
