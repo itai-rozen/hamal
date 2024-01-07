@@ -6,9 +6,9 @@ const Nav = () => {
                    font-bold group
                    *: text-slate-200 *: text-[16px] *:transition-all">
         <Link className="hover:text-white   hover:transition-all hover:transition-in" href="/">Dashboard</Link>
-        <Link href="/TableManager">Table Manager</Link>
-        <Link href="/Workbench">Workbench</Link>
-        <Link href="/Login">Login</Link>
+        <Link className="hover:text-white   hover:transition-all hover:transition-in" href="/TableManager">Table Manager</Link>
+        <Link className="hover:text-white   hover:transition-all hover:transition-in" href="/Workbench">Workbench</Link>
+        <Link className="hover:text-white   hover:transition-all hover:transition-in" href="/Login">Login</Link>
     </nav>
   )
 }
