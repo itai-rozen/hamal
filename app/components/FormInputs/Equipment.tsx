@@ -12,7 +12,7 @@ export default function Equipment() {
       variant="standard" 
       label="Full Name" 
       required 
-      value={"test NAME"}  
+     defaultValue={"test NAME"}  
        />
     <TextField 
       id="phone" 
@@ -21,15 +21,14 @@ export default function Equipment() {
       variant="standard" 
       label="Phone" 
       required 
-      value={"111111111"}  
+     defaultValue={"111111111"}  
     />
     <FormControlLabel 
       control={
         <Checkbox 
-          defaultChecked 
           checked={needTransport}
-          name="need_transport" 
           value={needTransport}
+          name="need_transport" 
           onChange={(e: ChangeEvent<HTMLInputElement>) => setNeedTransport((e.target.checked)) } 
         />} 
       label="Need transport?" 
@@ -53,7 +52,7 @@ export default function Equipment() {
       name="content" 
       id="equipment-content"
       placeholder="10 XL t-shirts"
-      value="11 octopus"
+      defaultValue="11 octopus"
       />
     <TextField
       variant="outlined"
