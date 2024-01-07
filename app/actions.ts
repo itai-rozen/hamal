@@ -2,17 +2,23 @@
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 // import connectDb from './Workbench/connect'
 import { cookies } from 'next/headers';
-import { createPool } from "@vercel/postgres";
+import { createPool, sql, db, QueryResultRow } from "@vercel/postgres";
 
 export async function createQuery(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
-  console.log('formdata: ', rawFormData.sql_action)
-  const action  = rawFormData.sql_action;
-  let query = `${action} ${rawFormData.tableName} `;
-  delete rawFormData.tableName;
-  delete rawFormData.sql_action;
-  const keys = Object.keys(rawFormData)
-  const values = Object.values(rawFormData)
+
+  const { sql_action : action, tableName }   = rawFormData;
+  if (!action || !tableName) return;
+  let query = `${action} ${tableName} `;
+  const keys = []
+  const values = []
+  for (const key in rawFormData) {
+    if (key.charAt(0) !== '$' && !['tableName', 'sql_action'].includes(key.trim())) {
+      keys.push(key);
+      values.push(rawFormData[key]);
+    }
+  }
+  
   query += `(${[...keys]}) VALUES(${values.map(value => value === 'true' ? true : `'${value}'`)})`;
   console.log('q: ', query)
   const response = await connectDb(query)
@@ -29,7 +35,7 @@ export async function connectDb(q: string): Promise<string> {
       const { rows } = response; 
       res.rows = rows;
     } catch(err) {
-      console.log('err: ', err)
+      console.log('err @connectDb: ', err)
       res.err = err;
     }
     await client.end()
