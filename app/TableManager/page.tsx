@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import { connectDb } from "../actions";
+import { Accordion, AccordionSummary, AccordionDetails, Dialog, DialogTitle, DialogActions } from "@mui/material";
 export default function TableManager() {
   const [equipmentData, setEquipmentData] = useState<[
     {
@@ -13,7 +14,8 @@ export default function TableManager() {
       phone: string,
       address: string | null
     }] | []>([]);
-  const [tableHeaders, setTableHeaders] = useState<string[]>([])
+  const [deletedId, setDeletedId] = useState<number|null>(null);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const fetchData = async () => {
     const resText: string = await connectDb('SELECT * FROM equipment ORDER BY date_created')
@@ -34,9 +36,38 @@ export default function TableManager() {
     }
   }, [])
 
-  const deleteRow = (id:Number):void => {
+  const deleteRow = (id:number|null):void => {
+    console.log('id: ', id)
     connectDb(`DELETE FROM equipment WHERE id=${id}`);
+    setDeletedId(null);
+    setModalOpen(false);
     fetchData();
+  }
+
+  const updateRow = (formData : FormData) => {
+    const fullName = formData.get('fullName')
+    const phone = formData.get('phone')
+    const notes = formData.get('notes')
+    const address = formData.get('address')
+    const needTransport = formData.has('needTransport') + '';
+    const status = formData.get('status')
+    const query = `
+    UPDATE equipment SET 
+                          fullName='${fullName}', 
+                              phone='${phone}', 
+                              notes='${notes}',
+                              need_transport=${needTransport},
+                              address='${address}',
+                              status='${status}',
+                              date_modified=NOW() 
+                            WHERE id=${formData.get('id')}`;    
+    try {
+      connectDb(query);
+      fetchData();
+    } catch(err) {
+      console.log('error @updateRow: ', err)
+    }
+
   }
 
   return (
@@ -62,11 +93,41 @@ export default function TableManager() {
               <p>{row.address}</p>
               <p>{row.notes}</p>
               <p>{row.status}</p>
-              <button>Update</button>
-              <button onClick={() => deleteRow(row.id)}>Delete</button>
+              <button onClick={() => {
+                setModalOpen(true)
+                setDeletedId(row.id)
+              }}>Delete</button>
+              <Accordion  className="relative">
+                <AccordionSummary >Update</AccordionSummary>
+                <AccordionDetails className="w-100 absolute z-10">
+                  <form action={updateRow}>
+                    <input type="hidden" name="id" defaultValue={row.id}  />
+                    <input type="text" name="fullName" defaultValue={row.fullname} />
+                    <input type="text" name="phone" defaultValue={row.phone} />
+                    <input type="checkbox" name="needTransport" checked={row.needTransport} />
+                    <input type="text" name="address" defaultValue={row.address ?? ''} />
+                    <textarea name="notes" cols={30} rows={10} value={row.notes}></textarea>
+                    <select name="status"  defaultValue={row.status}> 
+                      <option value="pending">pending</option>
+                      <option value="viewed">viewed</option>
+                      <option value="in progress">in progress</option>
+                      <option value="completed">completed</option>
+                      <option value="aborted">aborted</option>
+                    </select>
+                    <input type="submit" value="Save Changes" />
+                  </form>
+                </AccordionDetails>
+              </Accordion>
             </div>
           })
         }
+        <Dialog open={modalOpen as boolean && !!deletedId}>
+          <DialogTitle>Are you sure?</DialogTitle>
+          <DialogActions>
+            <button onClick={() => deleteRow(deletedId as number|null)}>yes</button>
+            <button onClick={() => setModalOpen(false)}>no</button>
+          </DialogActions>
+        </Dialog>
       </div>
     </>
   )
