@@ -1,18 +1,17 @@
 "use client"
 
-import Image from 'next/image'
 import MainForm from './MainForm'
-import styles from './page.module.css'
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
-import { ReactNode } from 'react'
-import  { userIdType } from '../types/intefaces'
+import {useState, useEffect } from 'react'
+import { Props } from 'next/script'
+import { connectDb } from '../actions'
 
-export default function Dashboard({userId}: any) {
+export default function Dashboard({userId}: { userId:string|undefined }) {
+
   return (
     <main>
       <h1>Hamal</h1>
-      <h2>User ID: </h2>
-      {`${userId}`}
+      <h2>User ID: {`${userId}`}</h2>
+      
     <MainForm />
     </main>
   )
