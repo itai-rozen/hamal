@@ -4,12 +4,20 @@ import { signIn } from "next-auth/react"
 import { useState } from "react"
 import { connectDb } from "../actions"
 import  bcrypt from 'bcryptjs'
+
 export default function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [msg, setMsg] = useState<string>('');
   
+  async function handleLogin() {
+    signIn('google');
+    await fetch('http://localhost:3000/api/setCookie', {
+      method:'post'
+    })
+  }
+
   async function signUp(formData: FormData) {
     const email = formData.get('signup_email')
     const password = formData.get('signup_password');
@@ -19,7 +27,7 @@ export default function Login() {
       return;
     }
     const hashedPwd = bcrypt.hashSync(password as string, 10);
-    const query = `INSERT INTO users (email, password) VALUES('${email}', '${hashedPwd}')`;
+    const query = `INSERT INTO hamal_users (email, password) VALUES('${email}', '${hashedPwd}')`;
     const responseText = await connectDb(query);
     const { rows, err } = JSON.parse(responseText);
     console.log('response: ', rows, err);

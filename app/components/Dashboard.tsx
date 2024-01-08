@@ -1,16 +1,16 @@
 "use client"
 
 import MainForm from './MainForm'
-import {useState, useEffect } from 'react'
-import { Props } from 'next/script'
-import { connectDb } from '../actions'
-
-export default function Dashboard({userId}: { userId:string|undefined }) {
-
+import { useSession } from 'next-auth/react'
+import { getIdByMail } from '../actions';
+import { useEffect, useState } from 'react';
+export default function Dashboard({ cookies }:any) {
+  console.log('cookies: ', JSON.parse(cookies))
   return (
     <main>
+
       <h1>Hamal</h1>
-      <h2>User ID: {`${userId}`}</h2>
+      <h2>User ID: {`${'token'}`}</h2>
       
     <MainForm />
     </main>
