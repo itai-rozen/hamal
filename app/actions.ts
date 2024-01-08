@@ -27,11 +27,10 @@ export async function createQuery(formData: FormData) {
 
 export async function connectDb(q: string): Promise<string> {
     const client = createPool({connectionString: process.env.POSTGRES_URL});
-    console.log('client: ', client)
     let res : { rows?: string[], err?: string|unknown } =  {rows: [], err: ''};
     try {
       const response = await client.query(q);
-      console.log('response: ', response)
+      console.log('response: ', response?.rows)
       const { rows } = response; 
       res.rows = rows;
     } catch(err) {
@@ -48,4 +47,19 @@ export async function getCookie(cookieName:string):Promise<RequestCookie|undefin
 
 export async function setCookie(cookieName:string, value:string, expires: number) {
   cookies().set(cookieName, value, { maxAge: expires })
+}
+
+export async function getIdByMail(email: string|null|undefined) {
+  console.log('invoked!')
+  const { rows } =  JSON.parse(await connectDb(`
+      SELECT manager_id, string_agg(table_name,',') as table_name
+      FROM table_managers
+      INNER JOIN hamal_users ON table_managers.manager_id=hamal_users.user_id
+      WHERE email='${email}'
+      GROUP BY manager_id
+      `))
+  if (rows.length > 0) {
+    return rows[0].manager_id
+  }
+    return null;
 }
