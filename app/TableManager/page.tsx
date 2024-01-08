@@ -8,7 +8,7 @@ export default function TableManager() {
       id: number,
       fullname: string,
       notes: string,
-      needTransport: boolean,
+      need_transport: boolean,
       status: string,
       date_created: string,
       phone: string,
@@ -49,7 +49,7 @@ export default function TableManager() {
     const phone = formData.get('phone')
     const notes = formData.get('notes')
     const address = formData.get('address')
-    const needTransport = formData.has('needTransport') + '';
+    const needTransport = formData.has('need_transport') + '';
     const status = formData.get('status')
     const query = `
     UPDATE equipment SET 
@@ -73,7 +73,7 @@ export default function TableManager() {
   return (
     <>
       <h1>Table manager</h1>
-      <div className="w-[80%] mx-auto *:flex *:justify-between *:align-left">
+      <div className="w-[90%] mx-auto *:flex *:justify-between *:align-left">
         <div className="table-headers">
           <p className="table-header">Full Name</p>
           <p className="table-header">Phone</p>
@@ -84,29 +84,38 @@ export default function TableManager() {
           <p className="table-header"></p>
           <p className="table-header"></p>
         </div>
+        <div className="flex-col">
         {
-          equipmentData.length && equipmentData.map(row => {
-            return <div key={row.id}  >
-              <p>{row.fullname}</p>
-              <p>{row.phone}</p>
-              <p>{row.needTransport ? 'yes' : 'no'}</p>
-              <p>{row.address}</p>
-              <p>{row.notes}</p>
-              <p>{row.status}</p>
-              <button onClick={() => {
-                setModalOpen(true)
-                setDeletedId(row.id)
-              }}>Delete</button>
-              <Accordion  className="relative">
-                <AccordionSummary >Update</AccordionSummary>
-                <AccordionDetails className="w-100 absolute z-10">
+          equipmentData.length > 0 && equipmentData.map(row => {
+            return <Accordion  className="w-[100%]">
+                <AccordionSummary 
+                  sx={{pointerEvents: 'none'}}
+                  className="w-[100%]"
+                  expandIcon = {
+                    <p className="mx-3 pointer-events-auto">Update</p>
+                  }>
+                 <div key={row.id}  className="w-[100%] flex justify-between">
+                    <p>{row.fullname}</p>
+                    <p>{row.phone}</p>
+                    <p>{row.need_transport ? 'yes' : 'no'}</p>
+                    <p>{row.address}</p>
+                    <p>{row.notes}</p>
+                    <p>{row.status}</p>
+                    <button className="pointer-events-auto" onClick={e => {
+                      e.stopPropagation();
+                      setModalOpen(true)
+                      setDeletedId(row.id)
+                    }}>Delete</button>
+                  </div>
+                </AccordionSummary>
+                <AccordionDetails className="w-[100%] flex z-10 [&>form>input]:flex-0.5">
                   <form action={updateRow}>
                     <input type="hidden" name="id" defaultValue={row.id}  />
                     <input type="text" name="fullName" defaultValue={row.fullname} />
                     <input type="text" name="phone" defaultValue={row.phone} />
-                    <input type="checkbox" name="needTransport" checked={row.needTransport} />
+                    <input type="checkbox" name="needTransport" checked={row.need_transport} />
                     <input type="text" name="address" defaultValue={row.address ?? ''} />
-                    <textarea name="notes" cols={30} rows={10} value={row.notes}></textarea>
+                    <textarea className="flex-2" name="notes" cols={10} rows={1} value={row.notes}></textarea>
                     <select name="status"  defaultValue={row.status}> 
                       <option value="pending">pending</option>
                       <option value="viewed">viewed</option>
@@ -118,9 +127,9 @@ export default function TableManager() {
                   </form>
                 </AccordionDetails>
               </Accordion>
-            </div>
           })
         }
+        </div>
         <Dialog open={modalOpen as boolean && !!deletedId}>
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogActions>
