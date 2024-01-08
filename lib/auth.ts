@@ -2,11 +2,17 @@ import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from "next-auth/providers/credentials";
+import PostgresAdapter from "@auth/pg-adapter";
+import { createPool } from "@vercel/postgres";
 import { connectDb } from "@/app/actions";
 import bcrypt from 'bcryptjs'
+import { Adapter } from "next-auth/adapters";
 interface Credentials extends Record<"email" | "password", string> {}
+const pool = createPool({connectionString: process.env.POSTGRES_URL});
 
 export const authOptions : NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
+  adapter: PostgresAdapter(pool) as Adapter,
   // Configure one or more authentication providers
   providers: [
     GoogleProvider({
@@ -28,7 +34,6 @@ export const authOptions : NextAuthOptions = {
           if (rows.length) {
           const user : { email: string, password: string } = rows[0];
           const valid : Boolean = await bcrypt.compare(credentials?.password as string, user.password);
-          console.log('valid: ', valid)
           return (valid) ? user : null
         } 
         else
