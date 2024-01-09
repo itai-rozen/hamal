@@ -50,16 +50,24 @@ export async function setCookie(cookieName:string, value:string, expires: number
 }
 
 export async function getIdByMail(email: string|null|undefined) {
-  console.log('invoked!')
+  console.log('email: ', email)
   const { rows } =  JSON.parse(await connectDb(`
-      SELECT manager_id, string_agg(table_name,',') as table_name
+      SELECT COUNT(*)
       FROM table_managers
       INNER JOIN hamal_users ON table_managers.manager_id=hamal_users.user_id
       WHERE email='${email}'
       GROUP BY manager_id
       `))
-  if (rows.length > 0) {
-    return rows[0].manager_id
+  if (rows.length > 0 && +rows[0]?.count > 0) {
+    return true
   }
-    return null;
+    return false;
+}
+
+export async function managerExist(id: string) {
+  const { rows } =  JSON.parse(await connectDb(`
+  SELECT COUNT(*) FROM hamal_users WHERE user_id=${id}
+  `))
+  console.log('manager exist: ', rows )
+  return true;
 }
