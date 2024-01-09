@@ -9,6 +9,7 @@ import { Accordion,
          DialogActions,
          TextField,
          useTheme } from "@mui/material";
+import DashboardLayout from "../components/DashboardLayout";
 import theme  from './../styles/theme'
 export default function TableManager() {
   const [equipmentData, setEquipmentData] = useState<[
@@ -133,7 +134,7 @@ export default function TableManager() {
     aborted: theme.palette.error.light
   }
   return (
-    <>
+    <DashboardLayout>
       <h1>Table manager</h1>
       <div className="w-[90%] mx-auto *:flex *:justify-between *:text-left">
         <div className="table-headers">
@@ -211,6 +212,6 @@ export default function TableManager() {
             <button onClick={() => setModalOpen(false)}>no</button>
           </DialogActions>
         </Dialog>
-    </>
+    </DashboardLayout>
   )
 }

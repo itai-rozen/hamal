@@ -1,5 +1,6 @@
 "use client"
 import { connectDb } from '../actions'
+import DashboardLayout from '../components/DashboardLayout';
 import './workbench.css'
 import { ChangeEvent, useState } from 'react'
 export default function Workbench({getQuery} : {getQuery: Function}): React.ReactNode {
@@ -24,7 +25,7 @@ export default function Workbench({getQuery} : {getQuery: Function}): React.Reac
     
   }
   return (
-    <>
+    <DashboardLayout>
       <h1>Workbench</h1>
       <textarea cols={100} rows={10} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setQuery(e.target.value)} ></textarea>
       <button className='sql-btn' onClick={handleQuery}>ok</button>
@@ -46,6 +47,6 @@ export default function Workbench({getQuery} : {getQuery: Function}): React.Reac
         })
       }
       </div>
-    </>
+    </DashboardLayout>
   )
 } 
