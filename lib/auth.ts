@@ -13,6 +13,10 @@ const pool = createPool({connectionString: process.env.POSTGRES_URL});
 export const authOptions : NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   adapter: PostgresAdapter(pool) as Adapter,
+  session: {
+    strategy: 'jwt',
+    maxAge: 24 * 60 * 60 
+  },
   // Configure one or more authentication providers
   providers: [
     GoogleProvider({
@@ -25,12 +29,13 @@ export const authOptions : NextAuthOptions = {
         email: { label: 'Email', type: 'email', placeholder: 'example@exampke.com'},
         password: { label: "Password", type: "password" }
       },
+      
       /* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/
       // @ts-ignore
       async authorize(credentials) {
         console.log('credentials: ', credentials)
         try {
-          const { rows } =  JSON.parse(await connectDb(`SELECT * FROM users WHERE email='${credentials?.email}'`));
+          const { rows } =  JSON.parse(await connectDb(`SELECT * FROM hamal_users WHERE email='${credentials?.email}'`));
           if (rows.length) {
           const user : { email: string, password: string } = rows[0];
           const valid : Boolean = await bcrypt.compare(credentials?.password as string, user.password);
