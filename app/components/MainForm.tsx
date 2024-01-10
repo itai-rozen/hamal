@@ -4,7 +4,7 @@ import { useState, ChangeEvent } from 'react';
 import { createQuery } from '../actions';
 import Form from './Form'
 import { inputsMapType } from '../types/intefaces';
-import { Select, MenuItem, Input, SelectChangeEvent, Container, InputLabel, Button } from '@mui/material';
+import { Select, MenuItem, Input, SelectChangeEvent } from '@mui/material';
 
 export default function MainForm() {
   const [reqTable, setReqTable] = useState<keyof inputsMapType | string>('equipment');
