@@ -1,8 +1,9 @@
 "use server"
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
-// import connectDb from './Workbench/connect'
 import { cookies } from 'next/headers';
-import { createPool, sql, db, QueryResultRow } from "@vercel/postgres";
+import { createPool } from "@vercel/postgres";
+import bcrypt from 'bcryptjs'
+import { signIn } from 'next-auth/react';
 
 export async function createQuery(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
@@ -71,3 +72,14 @@ export async function managerExist(id: string) {
   console.log('manager exist: ', rows )
   return true;
 }
+
+export async function handleSignin(formData: FormData) {
+  const email = formData.get('email')
+  const password = formData.get('password');
+  signIn('credentials', {
+    redirect: false,
+    email,
+    password
+  })
+}
+
