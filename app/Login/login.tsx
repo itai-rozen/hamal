@@ -5,7 +5,7 @@ import { useState } from "react"
 import { connectDb } from "../actions"
 import bcrypt from 'bcryptjs'
 import { Button, Link, TextField, Typography } from "@mui/material"
-import { handleSignin, signUp } from "../actions"
+import { handleSignin } from "../actions"
 
 export default function Login() {
   const [isAccount, setIsAccount] = useState<boolean>(true);
