@@ -21,9 +21,11 @@ export default function MainForm() {
             id="hamal-req-table"
             label="Subject"
             onChange={(event: SelectChangeEvent<string>) => setReqTable(event.target.value)}
+            className='*:capitalize'
             >
               <MenuItem value=""></MenuItem>
-              <MenuItem value="equipment">Equipment</MenuItem>
+              <MenuItem value="equipment">equipment</MenuItem>
+              <MenuItem value="transport">transport</MenuItem>
           </Select>
           {/* <select  defaultValue={'equipment'} onChange={(event:React.ChangeEvent<HTMLSelectElement>) => setReqTable(event.target.value)}> */}
           {/* <option value="" ></option> */}
