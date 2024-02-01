@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react"
-import { Checkbox, FormControlLabel, Input, TextField } from "@mui/material"
+import { Checkbox, FormControlLabel, TextField } from "@mui/material"
 
 export default function Equipment() {
   const [needTransport, setNeedTransport] = useState<boolean>(true)
@@ -12,7 +12,7 @@ export default function Equipment() {
       variant="standard" 
       label="Full Name" 
       required 
-     defaultValue={"test NAME"}  
+      defaultValue={"test NAME"}  
        />
     <TextField 
       id="phone" 
